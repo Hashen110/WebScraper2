@@ -11,7 +11,7 @@ func check(err error) {
 	}
 }
 
-func getDistrict() string  {
+func getDistrict() string {
 	districts := [8]string{"colombo", "kandy", "galle", "ampara", "anuradhapura", "badulla", "batticaloa", "gampaha"}
 	fmt.Println("\nPlease select a district")
 	for i, dis := range districts {
@@ -27,6 +27,16 @@ func getDistrict() string  {
 	case 2:
 		return districts[-district-1]
 	case 3:
+		return districts[-district-1]
+	case 4:
+		return districts[-district-1]
+	case 5:
+		return districts[-district-1]
+	case 6:
+		return districts[-district-1]
+	case 7:
+		return districts[-district-1]
+	case 8:
 		return districts[-district-1]
 	default:
 		return ""
@@ -49,6 +59,18 @@ func getCategory() string {
 	case 2:
 		return categories[category-1]
 	case 3:
+		return categories[category-1]
+	case 4:
+		return categories[category-1]
+	case 5:
+		return categories[category-1]
+	case 6:
+		return categories[category-1]
+	case 7:
+		return categories[category-1]
+	case 8:
+		return categories[category-1]
+	case 9:
 		return categories[category-1]
 	default:
 		return ""
@@ -82,5 +104,5 @@ func main() {
 	col.OnScraped(func(r *colly.Response) {
 		fmt.Println("\nFinished", r.Request.URL)
 	})
-	_ = col.Visit("https://ikman.lk/en/ads/"+district+"/"+category)
+	_ = col.Visit("https://ikman.lk/en/ads/" + district + "/" + category)
 }
