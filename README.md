@@ -1,2 +1,2 @@
 # WebScraper2
-Simple Websraper2 create using go
+Simple Websraper2 createed using go
