@@ -25,19 +25,19 @@ func getDistrict() string {
 	case 1:
 		return districts[district-1]
 	case 2:
-		return districts[-district-1]
+		return districts[district-1]
 	case 3:
-		return districts[-district-1]
+		return districts[district-1]
 	case 4:
-		return districts[-district-1]
+		return districts[district-1]
 	case 5:
-		return districts[-district-1]
+		return districts[district-1]
 	case 6:
-		return districts[-district-1]
+		return districts[district-1]
 	case 7:
-		return districts[-district-1]
+		return districts[district-1]
 	case 8:
-		return districts[-district-1]
+		return districts[district-1]
 	default:
 		return ""
 	}
