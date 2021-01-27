@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gocolly/colly"
+	"os"
 )
 
 func check(err error) {
@@ -82,7 +83,15 @@ func main() {
 	fmt.Println("===============")
 
 	district := getDistrict()
+	if district == "" {
+		fmt.Println("Invalid Choice!")
+		os.Exit(0)
+	}
 	category := getCategory()
+	if category == "" {
+		fmt.Println("Invalid Choice!")
+		os.Exit(0)
+	}
 
 	col := colly.NewCollector()
 
