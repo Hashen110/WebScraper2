@@ -1,7 +1,9 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gocolly/colly"
 	"os"
 )
@@ -79,6 +81,7 @@ func getCategory() string {
 }
 
 func main() {
+	db, _ := sql.Open("mysql", "root:password@tcp(127.0.0.1:3306)/WebScraper")
 	fmt.Println("Web Scraper 2.0")
 	fmt.Println("===============")
 
@@ -96,11 +99,17 @@ func main() {
 	col := colly.NewCollector()
 
 	col.OnHTML(".gtm-normal-ad", func(element *colly.HTMLElement) {
+		title := element.ChildText(".heading--2eONR")
+		description := element.ChildText(".description--2-ez3")
+		price := element.ChildText(".price--3SnqI")
 		fmt.Println("Data: {")
-		fmt.Println("\tTitle: ", element.ChildText(".heading--2eONR"))
-		fmt.Println("\tDescription: ", element.ChildText(".description--2-ez3"))
-		fmt.Println("\tPrice: ", element.ChildText(".price--3SnqI"))
+		fmt.Println("\tTitle: ", title)
+		fmt.Println("\tDescription: ", description)
+		fmt.Println("\tPrice: ", price)
 		fmt.Println("}")
+		insert, err := db.Query("INSERT INTO Advertisement (district, category, title, description, price) VALUES (?, ?, ?, ?, ?)", district, category, title, description, price)
+		check(err)
+		defer insert.Close()
 	})
 
 	col.OnRequest(func(r *colly.Request) {
@@ -112,6 +121,7 @@ func main() {
 	})
 	col.OnScraped(func(r *colly.Response) {
 		fmt.Println("\nFinished", r.Request.URL)
+
 	})
 	_ = col.Visit("https://ikman.lk/en/ads/" + district + "/" + category)
 }
