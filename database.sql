@@ -13,7 +13,7 @@ CREATE TABLE Advertisement (
     postedOn VARCHAR (255) ,
     forSaleBy VARCHAR (255) ,
     meta TEXT ,
-    fullDescription TEXT (255) ,
+    fullDescription TEXT ,
     CONSTRAINT PRIMARY KEY (id)
 )ENGINE=INNODB;
 
