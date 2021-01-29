@@ -98,30 +98,65 @@ func main() {
 
 	col := colly.NewCollector()
 
+	var (
+		title           string
+		description     string
+		price           string
+		url             string
+		postedOn        string
+		forSaleBy       string
+		meta            string
+		fullDescription string
+	)
+
 	col.OnHTML(".gtm-normal-ad", func(element *colly.HTMLElement) {
-		title := element.ChildText(".heading--2eONR")
-		description := element.ChildText(".description--2-ez3")
-		price := element.ChildText(".price--3SnqI")
+		title = element.ChildText(".heading--2eONR")
+		description = element.ChildText(".description--2-ez3")
+		price = element.ChildText(".price--3SnqI")
+		url = element.ChildAttr(".card-link--3ssYv", "href")
 		fmt.Println("Data: {")
 		fmt.Println("\tTitle: ", title)
 		fmt.Println("\tDescription: ", description)
 		fmt.Println("\tPrice: ", price)
-		fmt.Println("}")
-		insert, err := db.Query("INSERT INTO Advertisement (district, category, title, description, price) VALUES (?, ?, ?, ?, ?)", district, category, title, description, price)
+		fmt.Println("\tURL: ", url)
+		err := element.Request.Visit(url)
 		check(err)
-		defer insert.Close()
+	})
+
+	col.OnHTML(".sub-title--37mkY", func(element *colly.HTMLElement) {
+		postedOn = element.Text
+		fmt.Println("\tPosted On: ", postedOn)
+	})
+
+	col.OnHTML(".contact-name--m97Sb", func(element *colly.HTMLElement) {
+		forSaleBy = element.Text
+		fmt.Println("\tFor Sale By: ", forSaleBy)
+	})
+
+	col.OnHTML(".ad-meta--17Bqm", func(element *colly.HTMLElement) {
+		meta = element.Text
+		fmt.Println("\tMeta: ", meta)
+	})
+
+	col.OnHTML(".description-section--oR57b > div > .description--1nRbz", func(element *colly.HTMLElement) {
+		fullDescription = element.Text
+		fmt.Println("\tFull Description: ", fullDescription)
+		fmt.Println("}")
 	})
 
 	col.OnRequest(func(r *colly.Request) {
-		fmt.Println("\nVisiting", r.URL.String())
+		//fmt.Println("\nVisiting", r.URL.String())
 	})
 	col.OnResponse(func(r *colly.Response) {
-		fmt.Println("Visited", r.Request.URL)
-		fmt.Println("")
+		//fmt.Println("Visited", r.Request.URL)
+		//fmt.Println("")
 	})
 	col.OnScraped(func(r *colly.Response) {
-		fmt.Println("\nFinished", r.Request.URL)
-
+		//fmt.Println("\nFinished", r.Request.URL)
+		insert, err := db.Query("INSERT INTO Advertisement (district, category, title, description, price, url, postedOn, forSaleBy, meta, fullDescription) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			district, category, title, description, price, url, postedOn, forSaleBy, meta, fullDescription)
+		check(err)
+		defer insert.Close()
 	})
 	_ = col.Visit("https://ikman.lk/en/ads/" + district + "/" + category)
 }
